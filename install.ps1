@@ -79,6 +79,26 @@ function Setup-Config {
         Write-Host "${Green}NVIDIA API key received${Reset}"
     }
     
+    # Detect Git Bash path for Windows
+    $gitBashPath = ""
+    $possiblePaths = @(
+        "C:\Program Files\Git\usr\bin\bash.exe",
+        "C:\Program Files (x86)\Git\usr\bin\bash.exe",
+        "C:\Users\$env:USERNAME\AppData\Local\Programs\Git\usr\bin\bash.exe"
+    )
+    
+    foreach ($path in $possiblePaths) {
+        if (Test-Path $path) {
+            $gitBashPath = $path
+            break
+        }
+    }
+    
+    if ([string]::IsNullOrEmpty($gitBashPath)) {
+        Write-Host "${Yellow}Git Bash not found in standard locations. Please install Git for Windows first.${Reset}"
+        $gitBashPath = "C:\Program Files\Git\usr\bin\bash.exe"
+    }
+    
     $envContent = @"
 # Free Claude Code Configuration
 # Uses NVIDIA NIM models
@@ -95,10 +115,14 @@ MODEL="nvidia_nim/deepseek-ai/deepseek-v3_2"
 # Claude bypass settings
 ANTHROPIC_AUTH_TOKEN="freecc"
 ANTHROPIC_BASE_URL="http://localhost:8082"
+
+# Windows Git Bash path for Claude Code
+CLAUDE_CODE_GIT_BASH_PATH="$gitBashPath"
 "@
     
     $envContent | Out-File -FilePath ".env" -Encoding UTF8
     Write-Host "${Green}Configuration created at .env${Reset}"
+    Write-Host "${Green}Git Bash path detected: $gitBashPath${Reset}"
     
     if ($nvidia_key -eq "YOUR_NVIDIA_API_KEY_HERE") {
         Write-Host "${Yellow}⚠️ Please edit .env file and replace YOUR_NVIDIA_API_KEY_HERE with your actual key${Reset}"
@@ -117,9 +141,29 @@ function Start-Server {
 function Create-BatchFile {
     Write-Host "${Yellow}Creating shortcuts...${Reset}"
     
+    # Get Git Bash path for batch file
+    $gitBashPath = ""
+    $possiblePaths = @(
+        "C:\Program Files\Git\usr\bin\bash.exe",
+        "C:\Program Files (x86)\Git\usr\bin\bash.exe",
+        "C:\Users\$env:USERNAME\AppData\Local\Programs\Git\usr\bin\bash.exe"
+    )
+    
+    foreach ($path in $possiblePaths) {
+        if (Test-Path $path) {
+            $gitBashPath = $path
+            break
+        }
+    }
+    
+    if ([string]::IsNullOrEmpty($gitBashPath)) {
+        $gitBashPath = "C:\Program Files\Git\usr\bin\bash.exe"
+    }
+    
     $batchContent = @"
 @echo off
 echo Starting Claude Code (Free)...
+set CLAUDE_CODE_GIT_BASH_PATH=$gitBashPath
 set ANTHROPIC_AUTH_TOKEN=freecc
 set ANTHROPIC_BASE_URL=http://localhost:8082
 claude %*
@@ -128,6 +172,29 @@ pause
     
     $batchContent | Out-File -FilePath "claude-free.bat" -Encoding ASCII
     Write-Host "${Green}Created claude-free.bat${Reset}"
+    
+    # Create PowerShell script for Git Bash path detection
+    $psContent = @"
+# Windows Git Bash path detection for Claude Code
+Write-Host "Detecting Git Bash path..."
+
+`$possiblePaths = @(
+    "C:\Program Files\Git\usr\bin\bash.exe",
+    "C:\Program Files (x86)\Git\usr\bin\bash.exe",
+    "C:\Users\`$env:USERNAME\AppData\Local\Programs\Git\usr\bin\bash.exe"
+)
+
+foreach (`$path in `$possiblePaths) {
+    if (Test-Path `$path) {
+        Write-Host "Git Bash found at: `$path"
+        Write-Host "Run: cygpath -w `$path"
+        break
+    }
+}
+"@
+    
+    $psContent | Out-File -FilePath "detect-git-bash.ps1" -Encoding ASCII
+    Write-Host "${Green}Created detect-git-bash.ps1 for path detection${Reset}"
 }
 
 function Show-Success {
