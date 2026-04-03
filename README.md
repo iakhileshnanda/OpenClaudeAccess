@@ -19,11 +19,11 @@ git clone https://github.com/iakhileshnanda/freecode.git
 cd freecode
 .\install.ps1
 
-# Method 2: Git Bash
+# Method 2: Git Bash (NEW!)
 git clone https://github.com/iakhileshnanda/freecode.git
 cd freecode
-chmod +x install.sh
-./install.sh
+chmod +x install-git-bash.sh
+./install-git-bash.sh
 ```
 
 ### Windows Issues? Try this:
@@ -31,6 +31,11 @@ chmod +x install.sh
 # Manual Windows setup
 $env:ANTHROPIC_AUTH_TOKEN="freecc"
 $env:ANTHROPIC_BASE_URL="http://localhost:8082"
+claude
+
+# Git Bash users
+export ANTHROPIC_AUTH_TOKEN="freecc"
+export ANTHROPIC_BASE_URL="http://localhost:8082"
 claude
 ```
 
