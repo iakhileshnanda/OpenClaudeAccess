@@ -143,7 +143,7 @@ function Show-Success {
     Write-Host "Run: .\claude-free.bat"
     Write-Host ""
     Write-Host "That's it! No login required."
-    Write-Host "Server running on http://localhost:8082"
+    Write-Host "Server running on http://localhost:8082""
 }
 
 # Main execution
