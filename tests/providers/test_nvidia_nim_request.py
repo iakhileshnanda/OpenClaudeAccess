@@ -132,3 +132,23 @@ class TestBuildRequestBody:
             "reasoning_effort",
         ):
             assert param not in extra
+
+    def test_non_thinking_model_skips_reasoning_params(self):
+        req = MagicMock()
+        req.model = "deepseek-ai/deepseek-v3_2"
+        req.messages = [MagicMock(role="user", content="hi")]
+        req.max_tokens = 100
+        req.system = None
+        req.temperature = None
+        req.top_p = None
+        req.stop_sequences = None
+        req.tools = None
+        req.tool_choice = None
+        req.extra_body = None
+        req.top_k = None
+
+        nim = NimSettings()
+        body = build_request_body(req, nim)
+        extra = body.get("extra_body", {})
+        assert "reasoning_budget" not in extra
+        assert "chat_template_kwargs" not in extra

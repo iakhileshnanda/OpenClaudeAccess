@@ -8,6 +8,13 @@ from config.nim import NimSettings
 from providers.common.message_converter import build_base_request_body
 from providers.common.utils import set_if_not_none
 
+# Models that do NOT support thinking/reasoning_budget parameters
+_NON_THINKING_MODELS = frozenset({
+    "deepseek-ai/deepseek-v3_2",
+    "deepseek-ai/deepseek-v3.1",
+    "deepseek-ai/deepseek-v3.1-terminus",
+})
+
 
 def _set_extra(
     extra_body: dict[str, Any], key: str, value: Any, ignore_value: Any = None
@@ -63,10 +70,14 @@ def build_request_body(request_data: Any, nim: NimSettings) -> dict:
     if request_extra:
         extra_body.update(request_extra)
 
-    extra_body.setdefault(
-        "chat_template_kwargs", {"thinking": True, "enable_thinking": True}
-    )
-    _set_extra(extra_body, "reasoning_budget", max_tokens)
+    model_name = body.get("model", "")
+    supports_thinking = model_name not in _NON_THINKING_MODELS
+
+    if supports_thinking:
+        extra_body.setdefault(
+            "chat_template_kwargs", {"thinking": True, "enable_thinking": True}
+        )
+        _set_extra(extra_body, "reasoning_budget", max_tokens)
 
     req_top_k = getattr(request_data, "top_k", None)
     top_k = req_top_k if req_top_k is not None else nim.top_k
