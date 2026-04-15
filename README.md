@@ -25,8 +25,8 @@ Make sure these are installed before running the installer:
 ### Linux / macOS
 
 ```bash
-git clone https://github.com/iakhileshnanda/freecode.git
-cd freecode
+git clone https://github.com/iakhileshnanda/OpenClaudeAccess.git
+cd OpenClaudeAccess
 chmod +x install.sh
 ./install.sh
 ```
@@ -34,8 +34,8 @@ chmod +x install.sh
 ### Windows (PowerShell - Recommended)
 
 ```powershell
-git clone https://github.com/iakhileshnanda/freecode.git
-cd freecode
+git clone https://github.com/iakhileshnanda/OpenClaudeAccess.git
+cd OpenClaudeAccess
 Set-ExecutionPolicy RemoteSigned -Scope Process
 .\install.ps1
 ```
@@ -43,8 +43,8 @@ Set-ExecutionPolicy RemoteSigned -Scope Process
 ### Windows (Git Bash)
 
 ```bash
-git clone https://github.com/iakhileshnanda/freecode.git
-cd freecode
+git clone https://github.com/iakhileshnanda/OpenClaudeAccess.git
+cd OpenClaudeAccess
 chmod +x install-git-bash.sh
 ./install-git-bash.sh
 ```
@@ -69,7 +69,7 @@ That's it. The server starts automatically in the background if it's not already
 6. Sets up the proxy server to **auto-start on login** (systemd on Linux, launchd on macOS, Startup folder on Windows)
 7. Starts the server immediately
 
-After install you can **delete the cloned `freecode` folder** - everything is installed globally.
+After install you can **delete the cloned `OpenClaudeAccess` folder** - everything is installed globally.
 
 ## Models
 
