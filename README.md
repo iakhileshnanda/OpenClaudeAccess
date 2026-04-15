@@ -2,13 +2,25 @@
 
 Use Claude Code CLI with NVIDIA NIM models - no Anthropic API key needed. **Install once, works everywhere.**
 
-## Prerequisites
+## Step 1 — Get Your Free NVIDIA API Key
+
+> You need this before running the installer. The installer will ask for it.
+
+1. Go to [build.nvidia.com/explore](https://build.nvidia.com/explore)
+2. Sign up or log in (free account)
+3. Click any model → click **"Get API Key"**
+4. Copy the key — it starts with `nvapi-...`
+
+Keep it handy, the installer will prompt you to paste it.
+
+## Step 2 — Prerequisites
+
+Make sure these are installed before running the installer:
 
 - **Node.js** (includes npm) - [nodejs.org](https://nodejs.org)
 - **Git** - [git-scm.com](https://git-scm.com)
-- **NVIDIA API key** (free) - [build.nvidia.com](https://build.nvidia.com/explore)
 
-## Install (one time)
+## Step 3 — Install (one time)
 
 ### Linux / macOS
 
@@ -61,11 +73,12 @@ After install you can **delete the cloned `freecode` folder** - everything is in
 
 ## Models
 
-| Claude Model | NVIDIA NIM Model | Use Case |
+| Claude Model | Model | Use Case |
 |---|---|---|
-| Opus | Kimi K2 | Premium reasoning |
-| Sonnet | Qwen3 Coder | Advanced coding |
-| Haiku | DeepSeek V3.2 | Fast & efficient |
+| Opus | qwen/qwen3.5-397b-a17b | Premium reasoning |
+| Sonnet | qwen/qwen3.5-397b-a17b | Advanced coding |
+| Haiku | qwen/qwen3.5-397b-a17b | Fast & efficient |
+| Default (MODEL) | deepseek-ai/deepseek-v3_2 | Fallback |
 
 ## How It Works
 
@@ -85,7 +98,58 @@ The proxy server translates Anthropic API requests into NVIDIA NIM format. Claud
 
 ## Configuration
 
-Edit `~/.config/free-claude-code/.env` (Linux/macOS) or `%USERPROFILE%\.config\free-claude-code\.env` (Windows) to change your API key or models.
+Your config file lives at:
+- **Linux/macOS:** `~/.config/free-claude-code/.env`
+- **Windows:** `%USERPROFILE%\.config\free-claude-code\.env`
+
+### View / Edit the config file
+
+**Linux / macOS / Git Bash:**
+```bash
+# View
+cat ~/.config/free-claude-code/.env
+
+# Edit in nano
+nano ~/.config/free-claude-code/.env
+
+# Edit in VS Code
+code ~/.config/free-claude-code/.env
+```
+
+**Windows (PowerShell):**
+```powershell
+# View
+Get-Content "$env:USERPROFILE\.config\free-claude-code\.env"
+
+# Edit in Notepad
+notepad "$env:USERPROFILE\.config\free-claude-code\.env"
+
+# Edit in VS Code (if installed)
+code "$env:USERPROFILE\.config\free-claude-code\.env"
+```
+
+### Change Models
+
+Open the `.env` file using any method above and update these lines:
+
+```env
+MODEL_OPUS="qwen/qwen3.5-397b-a17b"
+MODEL_SONNET="qwen/qwen3.5-397b-a17b"
+MODEL_HAIKU="qwen/qwen3.5-397b-a17b"
+MODEL="deepseek-ai/deepseek-v3_2"
+```
+
+Replace the model values with any model available on [NVIDIA NIM](https://build.nvidia.com/explore). The format is just `org/model-name` (no prefix needed).
+
+After editing, restart the server for changes to take effect:
+
+```bash
+# Linux/macOS
+fcc-server
+
+# Windows (PowerShell)
+fcc-server
+```
 
 ## Uninstall
 
